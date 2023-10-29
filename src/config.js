@@ -23,6 +23,8 @@ class Config {
       tagSpecifications: null,
 
       // runner-specific
+      runnerName: core.getInput('runner-name'),
+      runnerGroup: core.getInput('runner-group'),
       runnerHomeDir: core.getInput('runner-home-dir'),
       preRunnerScript: core.getInput('pre-runner-script'),
     };

@@ -75,6 +75,14 @@ inputs:
       The label is used to remove the runner from GitHub when the runner is not needed anymore.
       This input is required if you use the 'stop' mode.
     required: false
+  runner-name:
+    description: >-
+      Specifies the name to associate with the runner created for this instance.
+    required: false
+  runner-group:
+    description: >-
+      Specifies the runner group to add the runner to.
+    required: false
   runner-home-dir:
     description: >-
       Directory that contains actions-runner software and scripts. E.g. /home/runner/actions-runner.
