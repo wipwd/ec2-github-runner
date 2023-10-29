@@ -45,6 +45,8 @@ function buildUserDataScript(githubRegistrationToken, label) {
 async function startEc2Instance(label, githubRegistrationToken) {
   const ec2 = new AWS.EC2();
 
+  core.info(`start instance name '${config.input.ec2InstanceName}'`);
+
   const userData = buildUserDataScript(githubRegistrationToken, label);
 
   const params = {

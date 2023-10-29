@@ -12,6 +12,7 @@ class Config {
       // ec2-specific
       ec2ImageId: core.getInput('ec2-image-id'),
       ec2InstanceType: core.getInput('ec2-instance-type'),
+      ec2InstanceName: core.getInput('ec2-instance-name'),
       subnetId: core.getInput('ec2-subnet-id'),
       securityGroupId: core.getInput('ec2-security-group-id'),
       ec2InstanceId: core.getInput('ec2-instance-id'),
@@ -29,7 +30,28 @@ class Config {
       preRunnerScript: core.getInput('pre-runner-script'),
     };
 
-    const tags = JSON.parse(core.getInput('ec2-resource-tags'));
+    const tags = [];
+
+    if (this.input.ec2InstanceName != '') {
+      tags.push({
+        Key: 'Name',
+        Value: this.input.ec2InstanceName,
+      });
+    }
+
+    const resourceTagsStr = core.getInput('ec2-resource-tags');
+    if (resourceTagsStr != '') {
+      const resourceTags = JSON.parse(core.getInput('ec2-resource-tags'));
+
+      if (!Array.isArray(resourceTags)) {
+        throw new Error('ec2-resource-tags defined but not an array');
+      }
+
+      resourceTags.forEach((entry) => {
+        tags.push(entry);
+      });
+    }
+
     if (tags.length > 0) {
       this.tagSpecifications = [
         { ResourceType: 'instance', Tags: tags },
