@@ -21,8 +21,8 @@ function buildUserDataScript(githubRegistrationToken, label) {
       `echo "${config.input.preRunnerScript}" > pre-runner-script.sh`,
       'source pre-runner-script.sh',
       'export RUNNER_ALLOW_RUNASROOT=1',
-      `./config.sh --url https://github.com/${config.githubContext.owner}/${config.githubContext.repo} --token ${githubRegistrationToken} --labels ${label} ${runnerExtraArgs} --unattended`,
-      './run.sh',
+      `./config.sh --url https://github.com/${config.githubContext.owner}/${config.githubContext.repo} --token ${githubRegistrationToken} --labels ${label} ${runnerExtraArgs} --unattended |& tee runner.log`,
+      './run.sh |& tee -a runner.log',
     ];
   } else {
     return [
@@ -34,8 +34,8 @@ function buildUserDataScript(githubRegistrationToken, label) {
       'curl -O -L https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linux-${RUNNER_ARCH}-2.311.0.tar.gz',
       'tar xzf ./actions-runner-linux-${RUNNER_ARCH}-2.311.0.tar.gz',
       'export RUNNER_ALLOW_RUNASROOT=1',
-      `./config.sh --url https://github.com/${config.githubContext.owner}/${config.githubContext.repo} --token ${githubRegistrationToken} --labels ${label} ${runnerExtraArgs} --unattended`,
-      './run.sh',
+      `./config.sh --url https://github.com/${config.githubContext.owner}/${config.githubContext.repo} --token ${githubRegistrationToken} --labels ${label} ${runnerExtraArgs} --unattended |& tee runner.log`,
+      './run.sh |& tee -a runner.log',
     ];
   }
 }
