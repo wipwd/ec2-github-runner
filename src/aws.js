@@ -13,8 +13,10 @@ function buildUserDataScript(githubRegistrationToken, label) {
   }
 
   if (config.input.runnerHomeDir) {
-    // If runner home directory is specified, we expect the actions-runner software (and dependencies)
-    // to be pre-installed in the AMI, so we simply cd into that directory and then start the runner
+    // If runner home directory is specified, we expect the actions-runner
+    // software (and dependencies) to be pre-installed in the AMI, so we simply
+    // cd into that directory and then start the runner.
+    core.debug(`run from predefined directory: ${config.input.runnerHomeDir}`);
     return [
       '#!/bin/bash',
       `cd "${config.input.runnerHomeDir}"`,
