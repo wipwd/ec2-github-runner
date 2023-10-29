@@ -5,20 +5,24 @@ class Config {
   constructor() {
     this.input = {
       mode: core.getInput('mode'),
+
+      // github-specific
       githubToken: core.getInput('github-token'),
+
+      // ec2-specific
       ec2ImageId: core.getInput('ec2-image-id'),
       ec2InstanceType: core.getInput('ec2-instance-type'),
-      subnetId: core.getInput('subnet-id'),
-      securityGroupId: core.getInput('security-group-id'),
-      label: core.getInput('label'),
+      subnetId: core.getInput('ec2-subnet-id'),
+      securityGroupId: core.getInput('ec2-security-group-id'),
       ec2InstanceId: core.getInput('ec2-instance-id'),
-      iamRoleName: core.getInput('iam-role-name'),
+      iamRoleName: core.getInput('ec2-iam-role-name'),
+      label: core.getInput('label'),
+      tagSpecifications: null,
       runnerHomeDir: core.getInput('runner-home-dir'),
       preRunnerScript: core.getInput('pre-runner-script'),
     };
 
-    const tags = JSON.parse(core.getInput('aws-resource-tags'));
-    this.tagSpecifications = null;
+    const tags = JSON.parse(core.getInput('ec2-resource-tags'));
     if (tags.length > 0) {
       this.tagSpecifications = [{ResourceType: 'instance', Tags: tags}, {ResourceType: 'volume', Tags: tags}];
     }
