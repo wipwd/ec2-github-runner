@@ -43,11 +43,41 @@ async function startEc2Instance(label, githubRegistrationToken) {
     MinCount: 1,
     MaxCount: 1,
     UserData: Buffer.from(userData.join('\n')).toString('base64'),
-    SubnetId: config.input.subnetId,
-    SecurityGroupIds: [config.input.securityGroupId],
     IamInstanceProfile: { Name: config.input.iamRoleName },
     TagSpecifications: config.tagSpecifications,
   };
+
+  if (config.input.ec2KeyName != '') {
+    params.KeyName = config.input.ec2KeyName;
+  }
+
+  if (config.input.ec2PublicNetwork) {
+    params.NetworkInterfaces = [
+      {
+        AssociatePublicIpAddress: true,
+        Groups: [config.input.securityGroupId],
+        SubnetId: config.input.subnetId,
+        DeviceIndex: 0,
+      },
+    ];
+  } else {
+    params.SubnetId = config.input.subnetId;
+    params.SecurityGroupIds = [config.input.securityGroupId];
+  }
+
+  if (config.input.ec2ImageSize > 0) {
+    params.BlockDeviceMappings = [
+      {
+        DeviceName: '/dev/sda1',
+        Ebs: {
+          DeleteOnTermination: true,
+          VolumeSize: config.input.ec2ImageSize,
+          VolumeType: 'gp2',
+          Encrypted: false,
+        },
+      },
+    ];
+  }
 
   try {
     const result = await ec2.runInstances(params).promise();

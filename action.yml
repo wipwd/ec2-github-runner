@@ -55,6 +55,20 @@ inputs:
       for example: '[{"Key": "TagKey1", "Value": "TagValue1"}, {"Key": "TagKey2", "Value": "TagValue2"}]'
     required: false
     default: '[]'
+  ec2-root-disk-size:
+    description: >-
+      Specifies the size for the root disk image, in GB.
+    required: false
+  ec2-public-network:
+    description: >-
+      Whether a public network should be assigned to the runner.
+    required: false
+    default: false
+  ec2-key-name:
+    description: >-
+      Key Name to associate with instance. Required if 'ec2-public-network' is
+      set.
+    required: false
   label:
     description: >-
       Name of the unique label assigned to the runner.

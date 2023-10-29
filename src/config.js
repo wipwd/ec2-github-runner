@@ -16,15 +16,32 @@ class Config {
       securityGroupId: core.getInput('ec2-security-group-id'),
       ec2InstanceId: core.getInput('ec2-instance-id'),
       iamRoleName: core.getInput('ec2-iam-role-name'),
+      ec2ImageSize: 0,
+      ec2PublicNetwork: core.getBooleanInput('ec2-public-network'),
+      ec2KeyName: core.getInput('ec2-key-name'),
       label: core.getInput('label'),
       tagSpecifications: null,
+
+      // runner-specific
       runnerHomeDir: core.getInput('runner-home-dir'),
       preRunnerScript: core.getInput('pre-runner-script'),
     };
 
     const tags = JSON.parse(core.getInput('ec2-resource-tags'));
     if (tags.length > 0) {
-      this.tagSpecifications = [{ResourceType: 'instance', Tags: tags}, {ResourceType: 'volume', Tags: tags}];
+      this.tagSpecifications = [
+        { ResourceType: 'instance', Tags: tags },
+        { ResourceType: 'volume', Tags: tags },
+      ];
+    }
+
+    const imageSize = core.getInput('ec2-root-disk-size');
+    if (imageSize != '') {
+      const val = parseInt(imageSize);
+      if (val <= 0) {
+        throw new Error('Root Disk Image size must be greater than zero.');
+      }
+      this.input.ec2ImageSize = imageSize;
     }
 
     // the values of github.context.repo.owner and github.context.repo.repo are taken from
@@ -57,6 +74,13 @@ class Config {
       }
     } else {
       throw new Error('Wrong mode. Allowed values: start, stop.');
+    }
+
+    if (this.input.ec2PublicNetwork) {
+      // must have a key name
+      if (!this.input.ec2KeyName) {
+        throw new Error('Key Name not specified for use with public network.');
+      }
     }
   }
 
